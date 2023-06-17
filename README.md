@@ -86,8 +86,10 @@ Requires:
 Build a recovery image:
 
 ```bash
-nix build github:hoverbear-consulting/flake#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage
+nix build github:an-sdgr/flake#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage
 ```
+
+> locally, you can substitute '.' for 'github:an-sdgr/flake'
 
 Flash it to a USB:
 
