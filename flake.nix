@@ -150,7 +150,7 @@
             inherit (x86_64Base) system;
             modules = x86_64Base.modules ++ [
               platforms.mini
-              platforms.architect
+              #platforms.architect
               traits.machine
               #traits.gnome
               #traits.workstation

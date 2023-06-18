@@ -106,9 +106,9 @@ qemu-system-x86_64 -enable-kvm -m 4096 -cdrom isoImage/iso/*.iso
 Start the machine, or reboot it. Once logged in, partion, format, and mount the NVMe disk:
 
 ```bash
-export TARGET_DEVICE=/dev/nvme1n1
-export EFI_PARTITION=/dev/nvme1n1p1
-export ROOT_PARTITION=/dev/nvme1n1p2
+export TARGET_DEVICE=/dev/nvme0n1
+export EFI_PARTITION=/dev/nvme0n1p1
+export ROOT_PARTITION=/dev/nvme0n1p2
 ```
 
 Then, **follow the [Partitioning](#partitioning) section.**

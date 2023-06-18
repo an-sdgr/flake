@@ -111,7 +111,7 @@
   #  spotify
   #] else if stdenv.isAarch64 then [
   #  spotifyd
-  #] else [ ]);
+  ];
 
   #programs.vscode = {
   #  enable = true;
