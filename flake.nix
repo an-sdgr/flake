@@ -68,10 +68,10 @@
             };
           in
           {
-            ana = home-manager.lib.homeManagerConfiguration {
+            nason = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [
-                ./users/ana/home.nix
+                ./users/nason/home.nix
               ];
             };
           }
@@ -143,7 +143,7 @@
               traits.workstation
               traits.gnome
               traits.hardened
-              users.ana
+              users.nason
             ];
           };
           mini = nixpkgs.lib.nixosSystem {
@@ -152,7 +152,7 @@
               platforms.mini
               traits.machine
               traits.k3s
-              users.ana
+              users.nason
             ];
           };
           architect = nixpkgs.lib.nixosSystem {
@@ -164,7 +164,7 @@
               traits.gnome
               traits.hardened
               traits.gaming
-              users.ana
+              users.nason
               services.postgres
             ];
           };
@@ -176,7 +176,7 @@
               traits.workstation
               traits.gnome
               traits.hardened
-              users.ana
+              users.nason
             ];
           };
           wsl = nixpkgs.lib.nixosSystem {
@@ -184,7 +184,7 @@
             modules = x86_64Base.modules ++ [
               nixos-wsl.nixosModules.wsl
               platforms.wsl
-              users.ana
+              users.nason
             ];
           };
         };
@@ -210,9 +210,8 @@
         traits.honeycomb_lx2k = ./traits/honeycomb_lx2k.nix;
         services.postgres = ./services/postgres.nix;
         services.openssh = ./services/openssh.nix;
-        # This trait is unfriendly to being bundled with platform-iso
         traits.workstation = ./traits/workstation.nix;
-        users.ana = ./users/ana;
+        users.nason = ./users/nason;
       };
 
       checks = forAllSystems (system:
