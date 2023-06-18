@@ -152,7 +152,9 @@
               platforms.mini
               platforms.architect
               traits.machine
-              traits.workstation
+              #traits.gnome
+              #traits.workstation
+              users.ana
             ];
           };
           architect = nixpkgs.lib.nixosSystem {

@@ -35,16 +35,16 @@
     };
     environment.systemPackages = with pkgs; [
       virt-manager
-      openrgb
+      #openrgb
       libva-utils
       vdpauinfo
       ffmpeg
-      openrgb
+      #openrgb
       neovimConfigured
     ];
 
-    services.udev.packages = with pkgs; [ openrgb ];
-    services.printing.enable = true;
+    #services.udev.packages = with pkgs; [ openrgb ];
+    #services.printing.enable = true;
   };
 }
 

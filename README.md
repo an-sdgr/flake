@@ -85,7 +85,7 @@ Build a recovery image:
 nix build github:an-sdgr/flake#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage
 ```
 
-> locally, you can substitute '.' like 'nix build .#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage'
+> locally, you can substitute '.' like `nix build .#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage`
 
 Flash it to a USB:
 
@@ -120,7 +120,7 @@ sudo bootctl install --esp-path=/mnt/efi
 sudo nixos-install --flake github:hoverbear-consulting/flake#architect --impure
 ```
 
-
+To customize further, clone this repo, `cd` to it, and run `direnv allow`
 
 ## Architect
 

@@ -27,9 +27,9 @@ in
     hardware.opengl.extraPackages = with pkgs; [
       # rocm-opencl-icd
       # rocm-runtime
-      amdvlk
+      #amdvlk
     ];
-    environment.variables.VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/amd_icd64.json";
+    #environment.variables.VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/amd_icd64.json";
 
     fileSystems = makeMounts {
       inherit device deviceLabel efiDevice;
@@ -43,13 +43,13 @@ in
       '';
     }; */
   
-    virtualisation.docker.enable = true;
+    #virtualisation.docker.enable = true;
 
-    nix.distributedBuilds = true;
-    nix.settings.builders = [ "@/etc/nix/machines" ];
+    #nix.distributedBuilds = true;
+    #nix.settings.builders = [ "@/etc/nix/machines" ];
 
-    networking.hostName = "architect";
-    networking.domain = "hoverbear.home";
+    networking.hostName = "mini";
+    networking.domain = "nason.local";
   };
 }
 
