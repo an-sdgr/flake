@@ -55,34 +55,34 @@
     # For libvirt: https://releases.nixos.org/nix-dev/2016-January/019069.html
     networking.firewall.checkReversePath = false;
 
-    programs.nm-applet.enable = true;
+    #programs.nm-applet.enable = true;
 
-    sound.enable = true;
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
+    #sound.enable = true;
+    #services.pipewire = {
+    #  enable = true;
+    #  alsa.enable = true;
+    #  alsa.support32Bit = true;
+    #  pulse.enable = true;
+    #};
     
-    services.tailscale.enable = true;
+    #services.tailscale.enable = true;
 
     security.rtkit.enable = true;
 
-    hardware.pulseaudio.enable = false;
+    #hardware.pulseaudio.enable = false;
     hardware.i2c.enable = true;
-    hardware.hackrf.enable = true;
+    #hardware.hackrf.enable = true;
     hardware.bluetooth.enable = true;
 
-    virtualisation.libvirtd.enable = true;
-    virtualisation.libvirtd.onBoot = "ignore";
-    virtualisation.libvirtd.qemu.package = pkgs.qemu_full;
-    virtualisation.libvirtd.qemu.ovmf.enable = true;
-    virtualisation.libvirtd.qemu.ovmf.packages = if pkgs.stdenv.isx86_64 then [ pkgs.OVMFFull.fd ] else [ pkgs.OVMF.fd ];
-    virtualisation.libvirtd.qemu.swtpm.enable = true;
-    virtualisation.libvirtd.qemu.swtpm.package = pkgs.swtpm;
-    virtualisation.libvirtd.qemu.runAsRoot = false;
-    virtualisation.spiceUSBRedirection.enable = true; # Note that this allows users arbitrary access to USB devices. 
+    #virtualisation.libvirtd.enable = true;
+    #virtualisation.libvirtd.onBoot = "ignore";
+    #virtualisation.libvirtd.qemu.package = pkgs.qemu_full;
+    #virtualisation.libvirtd.qemu.ovmf.enable = true;
+    #virtualisation.libvirtd.qemu.ovmf.packages = if pkgs.stdenv.isx86_64 then [ pkgs.OVMFFull.fd ] else [ pkgs.OVMF.fd ];
+    #virtualisation.libvirtd.qemu.swtpm.enable = true;
+    #virtualisation.libvirtd.qemu.swtpm.package = pkgs.swtpm;
+    #virtualisation.libvirtd.qemu.runAsRoot = false;
+    #virtualisation.spiceUSBRedirection.enable = true; # Note that this allows users arbitrary access to USB devices. 
     virtualisation.podman.enable = true;
 
     # opt in state

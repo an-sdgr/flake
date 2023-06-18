@@ -150,10 +150,8 @@
             inherit (x86_64Base) system;
             modules = x86_64Base.modules ++ [
               platforms.mini
-              #platforms.architect
               traits.machine
-              #traits.gnome
-              #traits.workstation
+              traits.k3s
               users.ana
             ];
           };
@@ -203,6 +201,7 @@
         traits.overlay = { nixpkgs.overlays = [ self.overlays.default ]; };
         traits.base = ./traits/base.nix;
         traits.machine = ./traits/machine.nix;
+        traits.k3s = ./traits/k3s.nix;
         traits.gaming = ./traits/gaming.nix;
         traits.gnome = ./traits/gnome.nix;
         traits.jetbrains = ./traits/jetbrains.nix;
