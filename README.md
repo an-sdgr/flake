@@ -38,7 +38,7 @@ The machines share a common partitioning strategy, once setting the required env
 > Be careful! Please!
 
 ```bash
-sudo nix run github:hoverbear-consulting/flake#unsafe-bootstrap
+sudo nix run github:an-sdgr/flake#unsafe-bootstrap
 ```
 
 ## Post-install
@@ -64,6 +64,35 @@ To use these keys on the `dm-crypt`:
 
 ```bash
 systemd-cryptenroll --fido2-device=auto $ROOT_PARTITION
+```
+
+## Mini
+
+A dell optiplex k8s server
+
+Set hard drives to AHCI, and disable secure boot.
+
+## Preparation
+
+Requires:
+
+* An `x86_64-linux` based `nix`.
+* A USB stick, 8+ GB preferred. ([Ex][parts-usb-stick-ex])
+
+Build a recovery image:
+
+```bash
+nix build github:an-sdgr/flake#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage
+```
+
+> locally, you can substitute '.' for 'github:an-sdgr/flake'
+
+Flash it to a USB:
+
+```bash
+ARCHITECT_USB=/dev/null
+umount $ARCHITECT_USB
+sudo cp -vi isoImage/iso/*.iso $ARCHITECT_USB
 ```
 
 ## Architect

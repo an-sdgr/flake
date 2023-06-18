@@ -20,22 +20,22 @@
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
     in
     {
-      overlays.default = final: prev: {
-        neovimConfigured = final.callPackage ./packages/neovimConfigured { };
-        fix-vscode = final.callPackage ./packages/fix-vscode { };
-      };
+      #overlays.default = final: prev: {
+      #  #neovimConfigured = final.callPackage ./packages/neovimConfigured { };
+      #  #fix-vscode = final.callPackage ./packages/fix-vscode { };
+      #};
 
       packages = forAllSystems
         (system:
           let
             pkgs = import nixpkgs {
               inherit system;
-              overlays = [ self.overlays.default ];
+              #overlays = [ self.overlays.default ];
               config.allowUnfree = true;
             };
           in
           {
-            inherit (pkgs) neovimConfigured fix-vscode;
+           # inherit (pkgs) neovimConfigured fix-vscode;
 
             # Excluded from overlay deliberately to avoid people accidently importing it.
             unsafe-bootstrap = pkgs.callPackage ./packages/unsafe-bootstrap { };
@@ -85,7 +85,7 @@
             modules = with self.nixosModules; [
               ({ config = { nix.registry.nixpkgs.flake = nixpkgs; }; })
               home-manager.nixosModules.home-manager
-              traits.overlay
+              #traits.overlay
               traits.base
               services.openssh
             ];
@@ -95,7 +95,7 @@
             modules = with self.nixosModules; [
               ({ config = { nix.registry.nixpkgs.flake = nixpkgs; }; })
               home-manager.nixosModules.home-manager
-              traits.overlay
+              #traits.overlay
               traits.base
               services.openssh
             ];
@@ -105,7 +105,7 @@
           x86_64IsoImage = nixpkgs.lib.nixosSystem {
             inherit (x86_64Base) system;
             modules = x86_64Base.modules ++ [
-              platforms.iso
+              platforms.iso-minimal
             ];
           };
           aarch64IsoImage = nixpkgs.lib.nixosSystem {
