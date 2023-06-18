@@ -4,9 +4,6 @@
 { pkgs, ... }:
 
 {
-  config = {
-
-
     networking = {
       networkmanager.enable = true;
       wireless.enable = false; # disable wpa_supplicant
@@ -31,14 +28,14 @@
     services.k3s = {
     enable = true;
     role = "server";
-    package = k3s;
+    package = pkgs.k3s;
     };
 
     security.rtkit.enable = true;
-    hardware.i2c.enable = true;
-    hardware.bluetooth.enable = true;
+    hardware = {
+      i2c.enable = true;
+      bluetooth.enable = true;
+    };
 
     #virtualisation.podman.enable = true;
-
-  };
 }
