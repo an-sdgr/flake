@@ -105,7 +105,7 @@
           x86_64IsoImage = nixpkgs.lib.nixosSystem {
             inherit (x86_64Base) system;
             modules = x86_64Base.modules ++ [
-              platforms.iso
+              platforms.iso-minimal
               platforms.mini
             ];
           };
@@ -144,6 +144,14 @@
               traits.gnome
               traits.hardened
               users.ana
+            ];
+          };
+          mini = nixpkgs.lib.nixosSystem {
+            inherit (aarch64Base) system;
+            modules = aarch64Base.modules ++ [
+              platforms.mini
+              traits.machine
+              traits.workstation
             ];
           };
           architect = nixpkgs.lib.nixosSystem {

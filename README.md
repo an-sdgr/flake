@@ -85,15 +85,42 @@ Build a recovery image:
 nix build github:an-sdgr/flake#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage
 ```
 
-> locally, you can substitute '.' for 'github:an-sdgr/flake'
+> locally, you can substitute '.' like 'nix build .#nixosConfigurations.x86_64IsoImage.config.system.build.isoImage --out-link isoImage'
 
 Flash it to a USB:
 
 ```bash
-ARCHITECT_USB=/dev/null
-umount $ARCHITECT_USB
-sudo cp -vi isoImage/iso/*.iso $ARCHITECT_USB
+NIXOS_USB=/dev/null
+umount $NIXOS_USB
+sudo cp -vi isoImage/iso/*.iso $NIXOS_USB
 ```
+
+To test the image locally:
+
+```shell-session
+qemu-system-x86_64 -enable-kvm -m 4096 -cdrom isoImage/iso/*.iso
+```
+
+## Bootstrap
+
+Start the machine, or reboot it. Once logged in, partion, format, and mount the NVMe disk:
+
+```bash
+export TARGET_DEVICE=/dev/nvme1n1
+export EFI_PARTITION=/dev/nvme1n1p1
+export ROOT_PARTITION=/dev/nvme1n1p2
+```
+
+Then, **follow the [Partitioning](#partitioning) section.**
+
+After, install the system:
+
+```bash
+sudo bootctl install --esp-path=/mnt/efi
+sudo nixos-install --flake github:hoverbear-consulting/flake#architect --impure
+```
+
+
 
 ## Architect
 
