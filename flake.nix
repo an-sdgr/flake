@@ -147,8 +147,8 @@
             ];
           };
           mini = nixpkgs.lib.nixosSystem {
-            inherit (aarch64Base) system;
-            modules = aarch64Base.modules ++ [
+            inherit (x86_64Base) system;
+            modules = x86_64Base.modules ++ [
               platforms.mini
               traits.machine
               traits.workstation
