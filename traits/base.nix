@@ -43,10 +43,8 @@
       fio
       smartmontools
       neovimConfigured
-      helix
       rnix-lsp
       graphviz
-      simple-http-server
       clinfo
     ];
     environment.shellAliases = { };

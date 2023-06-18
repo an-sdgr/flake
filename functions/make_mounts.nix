@@ -2,16 +2,16 @@
   Make a mount tree for adding to `fileSystems`
 
 */
-{ encryptedDeviceLabel, encryptedDevice, efiDevice }:
+{ deviceLabel, device, efiDevice }:
 
 {
   "/" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     options = [
       "subvol=root"
@@ -20,12 +20,12 @@
     ];
   };
   "/home" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     options = [
       "subvol=home"
@@ -34,12 +34,12 @@
     ];
   };
   "/nix" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     options = [
       "subvol=nix"
@@ -48,12 +48,12 @@
     ];
   };
   "/persist" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     neededForBoot = true;
     options = [
@@ -63,12 +63,12 @@
     ];
   };
   "/boot" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     neededForBoot = true;
     options = [
@@ -78,12 +78,12 @@
     ];
   };
   "/var/log" = {
-    device = "/dev/mapper/${encryptedDeviceLabel}";
+    device = "/dev/mapper/${deviceLabel}";
     fsType = "btrfs";
     encrypted = {
       enable = true;
-      label = encryptedDeviceLabel;
-      blkDev = encryptedDevice;
+      label = deviceLabel;
+      blkDev = device;
     };
     neededForBoot = true;
     options = [
