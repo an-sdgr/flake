@@ -3,18 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-wsl = {
-      # url = "github:nix-community/NixOS-WSL";
-      url = "github:K900/NixOS-WSL/native-systemd";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, nixos-wsl, home-manager }:
+  outputs = { self, nixpkgs, home-manager }:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
       forAllSystems = f:
@@ -105,73 +100,15 @@
             }
           ];
         };
-        honeycombIsoImage = nixpkgs.lib.nixosSystem {
-          inherit (aarch64Base) system;
-          modules = aarch64Base.modules ++ [
-            platforms.iso
-            traits.honeycomb_lx2k
-            {
-              config = {
-                virtualisation.vmware.guest.enable = nixpkgs.lib.mkForce false;
-                services.xe-guest-utilities.enable = nixpkgs.lib.mkForce false;
-              };
-            }
-          ];
-        };
-        gizmo = nixpkgs.lib.nixosSystem {
-          inherit (aarch64Base) system;
-          modules = aarch64Base.modules ++ [
-            platforms.gizmo
-            traits.honeycomb_lx2k
-            traits.machine
-            traits.workstation
-            traits.gnome
-            traits.hardened
-            users.nason
-          ];
-        };
         mini = nixpkgs.lib.nixosSystem {
           inherit (x86_64Base) system;
           modules = x86_64Base.modules
             ++ [ platforms.mini traits.machine traits.k3s users.nason ];
         };
-        architect = nixpkgs.lib.nixosSystem {
-          inherit (x86_64Base) system;
-          modules = x86_64Base.modules ++ [
-            platforms.architect
-            traits.machine
-            traits.workstation
-            traits.gnome
-            traits.hardened
-            traits.gaming
-            users.nason
-            services.postgres
-          ];
-        };
-        nomad = nixpkgs.lib.nixosSystem {
-          inherit (x86_64Base) system;
-          modules = x86_64Base.modules ++ [
-            platforms.nomad
-            traits.machine
-            traits.workstation
-            traits.gnome
-            traits.hardened
-            users.nason
-          ];
-        };
-        wsl = nixpkgs.lib.nixosSystem {
-          inherit (x86_64Base) system;
-          modules = x86_64Base.modules
-            ++ [ nixos-wsl.nixosModules.wsl platforms.wsl users.nason ];
-        };
       };
 
       nixosModules = {
         platforms.container = ./platforms/container.nix;
-        platforms.wsl = ./platforms/wsl.nix;
-        platforms.gizmo = ./platforms/gizmo.nix;
-        platforms.architect = ./platforms/architect.nix;
-        platforms.nomad = ./platforms/nomad.nix;
         platforms.mini = ./platforms/mini.nix;
         platforms.iso-minimal =
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
@@ -182,13 +119,6 @@
         traits.iso = ./traits/iso.nix;
         traits.machine = ./traits/machine.nix;
         traits.k3s = ./traits/k3s.nix;
-        traits.gaming = ./traits/gaming.nix;
-        traits.gnome = ./traits/gnome.nix;
-        traits.jetbrains = ./traits/jetbrains.nix;
-        traits.hardened = ./traits/hardened.nix;
-        traits.sourceBuild = ./traits/source-build.nix;
-        traits.honeycomb_lx2k = ./traits/honeycomb_lx2k.nix;
-        services.postgres = ./services/postgres.nix;
         services.openssh = ./services/openssh.nix;
         traits.workstation = ./traits/workstation.nix;
         users.nason = ./users/nason;
