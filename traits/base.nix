@@ -2,7 +2,6 @@
 { config, pkgs, ... }:
 
 {
-  config = {
     time.timeZone = "America/Vancouver";
     time.hardwareClockInLocalTime = true;
 
@@ -83,8 +82,5 @@
       builders-use-substitutes = true
     '';
 
-    #isoImage.squashfsCompression = "gzip -Xcompression-level 1";
-
     system.stateVersion = "23.05";
-  };
 }

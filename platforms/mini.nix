@@ -33,15 +33,6 @@ in {
 
     fileSystems = makeMounts { inherit device deviceLabel efiDevice; };
 
-    # This doesn't seem to work...
-    /* environment.etc."crypttab" = {
-         enable = true;
-         text = ''
-         encrypt /dev/nvme1n1p2 - fido2-device=auto
-         '';
-       };
-    */
-
     #virtualisation.docker.enable = true;
 
     #nix.distributedBuilds = true;

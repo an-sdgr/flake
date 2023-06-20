@@ -2,7 +2,6 @@
 { pkgs, ... }:
 
 {
-  config = {
     boot.kernel.sysctl = {
       # TCP Fast Open (TFO)
       "net.ipv4.tcp_fastopen" = 3;
@@ -88,7 +87,6 @@
       "L /var/lib/NetworkManager/seen-bssids - - - - /persist/var/lib/NetworkManager/seen-bssids"
       "L /var/lib/NetworkManager/timestamps - - - - /persist/var/lib/NetworkManager/timestamps"
       "L /etc/secrets - - - - /persist/secrets"
-      #"L /var/lib/bluetooth - - - - /persist/var/lib/bluetooth"
     ];
     boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
       mkdir -p /mnt
@@ -130,5 +128,4 @@
       umount /mnt
     '';
     swapDevices = [ ];
-  };
 }

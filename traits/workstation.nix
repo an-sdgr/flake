@@ -2,7 +2,6 @@
 { config, pkgs, ... }:
 
 {
-  config = {
     hardware.opengl.enable = true;
     hardware.opengl.driSupport = true;
     hardware.opengl.extraPackages = with pkgs; [
@@ -10,9 +9,6 @@
       vdpauinfo
       libvdpau-va-gl
     ];
-
-    #hardware.steam-hardware.enable = true;
-    #hardware.xpadneo.enable = true;
 
     fonts.fontconfig = {
       enable = true;
@@ -37,16 +33,12 @@
     };
     environment.systemPackages = with pkgs; [
       virt-manager
-      #openrgb
       libva-utils
       vdpauinfo
       ffmpeg
-      #openrgb
       neovimConfigured
     ];
 
-    #services.udev.packages = with pkgs; [ openrgb ];
     #services.printing.enable = true;
-  };
 }
 
