@@ -1,5 +1,5 @@
 # A trait for headed boxxen
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   hardware.opengl.enable = true;
