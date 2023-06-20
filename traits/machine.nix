@@ -1,6 +1,4 @@
-/*
-  A trait for configurations which are most definitely machines
-*/
+# A trait for configurations which are most definitely machines
 { pkgs, ... }:
 
 {
@@ -9,28 +7,20 @@
       # TCP Fast Open (TFO)
       "net.ipv4.tcp_fastopen" = 3;
     };
-    boot.initrd.availableKernelModules = [
-      "usb_storage"
-      "nbd"
-      "nvme"
-    ];
-    boot.kernelModules = [
-      "coretemp"
-      "vfio-pci"
-      "i2c-dev"
-      "i2c-piix"
-    ];
+    boot.initrd.availableKernelModules = [ "usb_storage" "nbd" "nvme" ];
+    boot.kernelModules = [ "coretemp" "vfio-pci" "i2c-dev" "i2c-piix" ];
     boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.loader.timeout = 30;
     boot.loader.systemd-boot.enable = true;
     boot.loader.systemd-boot.editor = true;
     boot.loader.systemd-boot.configurationLimit = 10;
     boot.loader.efi.efiSysMountPoint = "/efi";
-    boot.binfmt.emulatedSystems = if pkgs.stdenv.isx86_64 then [
-      "aarch64-linux"
-    ] else if pkgs.stdenv.isAarch64 then [
-      "x86_64-linux"
-    ] else [ ];
+    boot.binfmt.emulatedSystems = if pkgs.stdenv.isx86_64 then
+      [ "aarch64-linux" ]
+    else if pkgs.stdenv.isAarch64 then
+      [ "x86_64-linux" ]
+    else
+      [ ];
 
     # http://0pointer.net/blog/unlocking-luks2-volumes-with-tpm2-fido2-pkcs11-security-hardware-on-systemd-248.html
     # security.pam.u2f.enable = true;
@@ -41,9 +31,7 @@
     boot.initrd.luks.mitigateDMAAttacks = true;
 
     environment.sessionVariables.LIBVIRT_DEFAULT_URI = [ "qemu:///system" ];
-    environment.systemPackages = with pkgs; [
-      i2c-tools
-    ];
+    environment.systemPackages = with pkgs; [ i2c-tools ];
 
     users.mutableUsers = false;
 
@@ -89,7 +77,8 @@
     # From https://mt-caret.github.io/blog/posts/2020-06-29-optin-state.html
     environment.etc = {
       nixos.source = "/persist/etc/nixos";
-      "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections";
+      "NetworkManager/system-connections".source =
+        "/persist/etc/NetworkManager/system-connections";
       adjtime.source = "/persist/etc/adjtime";
       # NIXOS.source = "/persist/etc/NIXOS";
       machine-id.source = "/persist/etc/machine-id";

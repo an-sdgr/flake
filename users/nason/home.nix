@@ -8,16 +8,10 @@
     enable = true;
     userName = "Austin Nason";
     userEmail = "austin.nason@schrodinger.com";
-    extraConfig = {
-      init = {
-        defaultBranch = "main";
-      };
-    };
+    extraConfig = { init = { defaultBranch = "main"; }; };
   };
 
-  home.packages = with pkgs; [
-    neovimConfigured
-  ];
+  home.packages = with pkgs; [ neovimConfigured ];
 
   programs.home-manager.enable = true;
   home.stateVersion = "22.05";

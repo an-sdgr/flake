@@ -1,6 +1,4 @@
-/*
-  A trait for all boxxen
-*/
+# A trait for all boxxen
 { config, pkgs, ... }:
 
 {
@@ -49,20 +47,15 @@
 
     environment = {
       shellAliases = { };
-      variables = {
-        EDITOR = "${pkgs.neovimConfigured}/bin/nvim";
-      };
-      pathsToLink = [
-        "/share/nix-direnv"
-      ];
+      variables = { EDITOR = "${pkgs.neovimConfigured}/bin/nvim"; };
+      pathsToLink = [ "/share/nix-direnv" ];
     };
 
     programs.bash = {
       promptInit = ''
         eval "$(${pkgs.starship}/bin/starship init bash)"
       '';
-      shellInit = ''
-      '';
+      shellInit = "";
       loginShellInit = ''
         HAS_SHOWN_NEOFETCH=''${HAS_SHOWN_NEOFETCH:-false}
         if [[ $- == *i* ]] && [[ "$HAS_SHOWN_NEOFETCH" == "false" ]]; then
@@ -77,18 +70,18 @@
       '';
     };
 
-      security.sudo.wheelNeedsPassword = false;
-      security.sudo.extraConfig = ''
-        Defaults lecture = never
-      '';
+    security.sudo.wheelNeedsPassword = false;
+    security.sudo.extraConfig = ''
+      Defaults lecture = never
+    '';
 
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      nixpkgs.config.allowUnfree = true;
-      nix.extraOptions = ''
-        experimental-features = nix-command flakes
-        builders-use-substitutes = true
-      '';
+    home-manager.useGlobalPkgs = true;
+    home-manager.useUserPackages = true;
+    nixpkgs.config.allowUnfree = true;
+    nix.extraOptions = ''
+      experimental-features = nix-command flakes
+      builders-use-substitutes = true
+    '';
 
     #isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 

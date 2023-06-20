@@ -1,13 +1,15 @@
-/*
-  A trait for headed boxxen
-*/
+# A trait for headed boxxen
 { config, pkgs, ... }:
 
 {
   config = {
     hardware.opengl.enable = true;
     hardware.opengl.driSupport = true;
-    hardware.opengl.extraPackages = with pkgs; [ libvdpau vdpauinfo libvdpau-va-gl ];
+    hardware.opengl.extraPackages = with pkgs; [
+      libvdpau
+      vdpauinfo
+      libvdpau-va-gl
+    ];
 
     #hardware.steam-hardware.enable = true;
     #hardware.xpadneo.enable = true;

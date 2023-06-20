@@ -5,11 +5,8 @@ let
   encryptedDevice = "/dev/nvme0n1p2";
   efiDevice = "/dev/nvme0n1p1";
   makeMounts = import ./../functions/make_mounts.nix;
-in
-{
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+in {
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
     boot.kernelParams = [
@@ -32,19 +29,19 @@ in
     ];
     boot.initrd.kernelModules = [ "amdgpu" ];
     services.xserver.videoDrivers = [ "amdgpu" ];
-    hardware.opengl.extraPackages = with pkgs; [
-      # amdvlk
-      #rocm-opencl-icd
-      #rocm-runtime
-      # mesa.drivers
-    ];
+    hardware.opengl.extraPackages = with pkgs;
+      [
+        # amdvlk
+        #rocm-opencl-icd
+        #rocm-runtime
+        # mesa.drivers
+      ];
 
     # No spotify on aarch, so use spotifyd
     systemd.services.spotifyd.enable = true;
 
-    fileSystems = makeMounts {
-      inherit encryptedDevice encryptedDeviceLabel efiDevice;
-    };
+    fileSystems =
+      makeMounts { inherit encryptedDevice encryptedDeviceLabel efiDevice; };
 
     networking.hostName = "gizmo";
     networking.domain = "hoverbear.home";
@@ -60,58 +57,55 @@ in
 
     # This works around some 'glitching' in many GTK applications (and, importantly, Firefox)
     # jnettlet suggested the following patch:
-    hardware.opengl.package =
-      let
+    hardware.opengl.package = let
       myMesa = pkgs.mesa.override {
         galliumDrivers = [ "radeonsi" "swrast" ];
-      }; #.overrideAttrs (attrs: { patches = attrs.patches ++ [ ../patches/gizmo-lx2k-mesa.patch ]; });
-      in
-      lib.mkForce myMesa.drivers;
+      }; # .overrideAttrs (attrs: { patches = attrs.patches ++ [ ../patches/gizmo-lx2k-mesa.patch ]; });
+    in lib.mkForce myMesa.drivers;
 
-    /*
-      nixpkgs.localSystem.system = "aarch64-linux";
-      nixpkgs.localSystem.platform = (lib.systems.elaborate "aarch64-linux") // {
-      sys.gcc = {
-      fpu = "neon";
-      cpu = "cortex-a72";
-      arch = "armv8-a+crc+crypto";
-      };
-      };
+    /* nixpkgs.localSystem.system = "aarch64-linux";
+       nixpkgs.localSystem.platform = (lib.systems.elaborate "aarch64-linux") // {
+       sys.gcc = {
+       fpu = "neon";
+       cpu = "cortex-a72";
+       arch = "armv8-a+crc+crypto";
+       };
+       };
     */
 
     nixpkgs.overlays = [
-      (final: prev: {
-        # The default flags used in Nix builds are rather suboptimal for the LX2K.
-        # Additionally the `../trait/source-build.nix` trick won't work with Clang since it won't
-        # accept `-march=native` with the LX2K.
-        /*
-          stdenv = prev.stdenv // {
-          mkDerivation = args: prev.stdenv.mkDerivation (args // {
-          NIX_CFLAGS_COMPILE = toString (args.NIX_CFLAGS_COMPILE or "") + " -march=armv8-a+crc+crypto -ftree-vectorize";
-          });
-          };
-        */
-        # Because the above option changes the hash of stdnenv, and the current
-        # `rustPlatform.buildRustPackage`'s build proces includes creating a SHA checked
-        # `${name}-vendor` derivation, we must unfortunately opt out of the optimization
-        # in the Rust platform.
-        # inherit (prev) rustPlatform fetchCargoTarball cargo rustc rustup nix nixUnstable;
-      })
+      (final: prev:
+        {
+          # The default flags used in Nix builds are rather suboptimal for the LX2K.
+          # Additionally the `../trait/source-build.nix` trick won't work with Clang since it won't
+          # accept `-march=native` with the LX2K.
+          /* stdenv = prev.stdenv // {
+             mkDerivation = args: prev.stdenv.mkDerivation (args // {
+             NIX_CFLAGS_COMPILE = toString (args.NIX_CFLAGS_COMPILE or "") + " -march=armv8-a+crc+crypto -ftree-vectorize";
+             });
+             };
+          */
+          # Because the above option changes the hash of stdnenv, and the current
+          # `rustPlatform.buildRustPackage`'s build proces includes creating a SHA checked
+          # `${name}-vendor` derivation, we must unfortunately opt out of the optimization
+          # in the Rust platform.
+          # inherit (prev) rustPlatform fetchCargoTarball cargo rustc rustup nix nixUnstable;
+        })
     ];
 
     # nixpkgs.config.allowUnsupportedSystem = true;
 
     /* This seems to be a no-op??
-      nixpkgs.system = lib.recursiveUpdate (lib.systems.elaborate { system = "aarch64-linux"; }) {
-      system = "aarch64-linux";
-      platform.gcc = {
-      fpu = "neon";
-      cpu = "cortex-a72";
-      arch = "armv8-a+crc+crypto";
-      tune = "armv8-a+crc+crypto";
-      extraFlags = [ "-ftree-vectorize" ];
-      };
-      };
+       nixpkgs.system = lib.recursiveUpdate (lib.systems.elaborate { system = "aarch64-linux"; }) {
+       system = "aarch64-linux";
+       platform.gcc = {
+       fpu = "neon";
+       cpu = "cortex-a72";
+       arch = "armv8-a+crc+crypto";
+       tune = "armv8-a+crc+crypto";
+       extraFlags = [ "-ftree-vectorize" ];
+       };
+       };
     */
   };
 }

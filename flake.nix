@@ -17,177 +17,154 @@
   outputs = { self, nixpkgs, nixos-wsl, home-manager }:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
-      forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
-    in
-    {
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs supportedSystems (system: f system);
+    in {
       overlays.default = final: prev: {
         neovimConfigured = final.callPackage ./packages/neovimConfigured { };
         fix-vscode = final.callPackage ./packages/fix-vscode { };
       };
 
-      packages = forAllSystems
-        (system:
-          let
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ self.overlays.default ];
-              config.allowUnfree = true;
-            };
-          in
-          {
-            inherit (pkgs) neovimConfigured fix-vscode;
-
-            # Excluded from overlay deliberately to avoid people accidently importing it.
-            unsafe-bootstrap = pkgs.callPackage ./packages/unsafe-bootstrap { };
-          });
-
-      devShells = forAllSystems
-        (system:
-          let
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ self.overlays.default ];
-            };
-          in
-          {
-            default = pkgs.mkShell
-              {
-                inputsFrom = with pkgs; [ ];
-                buildInputs = with pkgs; [
-                  nixpkgs-fmt
-                ];
-              };
-          });
-
-      homeConfigurations = forAllSystems
-        (system:
-          let
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ self.overlays.default ];
-            };
-          in
-          {
-            nason = home-manager.lib.homeManagerConfiguration {
-              inherit pkgs;
-              modules = [
-                ./users/nason/home.nix
-              ];
-            };
-          }
-        );
-
-      nixosConfigurations =
+      packages = forAllSystems (system:
         let
-          # Shared config between both the liveimage and real system
-          aarch64Base = {
-            system = "aarch64-linux";
-            modules = with self.nixosModules; [
-              { config = { nix.registry.nixpkgs.flake = nixpkgs; }; }
-              home-manager.nixosModules.home-manager
-              traits.overlay
-              traits.base
-              services.openssh
-            ];
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
+            config.allowUnfree = true;
           };
-          x86_64Base = {
-            system = "x86_64-linux";
-            modules = with self.nixosModules; [
-              { config = { nix.registry.nixpkgs.flake = nixpkgs; }; }
-              home-manager.nixosModules.home-manager
-              traits.overlay
-              traits.base
-              services.openssh
-            ];
+        in {
+          inherit (pkgs) neovimConfigured fix-vscode;
+
+          # Excluded from overlay deliberately to avoid people accidently importing it.
+          unsafe-bootstrap = pkgs.callPackage ./packages/unsafe-bootstrap { };
+        });
+
+      devShells = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
           };
-        in
-        with self.nixosModules; {
-          x86_64IsoImage = nixpkgs.lib.nixosSystem {
-            inherit (x86_64Base) system;
-            modules = x86_64Base.modules ++ [
-              platforms.iso-minimal
-              platforms.mini
-            ];
+        in {
+          default = pkgs.mkShell {
+            inputsFrom = with pkgs; [ ];
+            buildInputs = with pkgs; [ nixpkgs-fmt ];
           };
-          aarch64IsoImage = nixpkgs.lib.nixosSystem {
-            inherit (aarch64Base) system;
-            modules = aarch64Base.modules ++ [
-              platforms.iso
-              {
-                config = {
-                  virtualisation.vmware.guest.enable = nixpkgs.lib.mkForce false;
-                  services.xe-guest-utilities.enable = nixpkgs.lib.mkForce false;
-                };
-              }
-            ];
+        });
+
+      homeConfigurations = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
           };
-          honeycombIsoImage = nixpkgs.lib.nixosSystem {
-            inherit (aarch64Base) system;
-            modules = aarch64Base.modules ++ [
-              platforms.iso
-              traits.honeycomb_lx2k
-              {
-                config = {
-                  virtualisation.vmware.guest.enable = nixpkgs.lib.mkForce false;
-                  services.xe-guest-utilities.enable = nixpkgs.lib.mkForce false;
-                };
-              }
-            ];
+        in {
+          nason = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [ ./users/nason/home.nix ];
           };
-          gizmo = nixpkgs.lib.nixosSystem {
-            inherit (aarch64Base) system;
-            modules = aarch64Base.modules ++ [
-              platforms.gizmo
-              traits.honeycomb_lx2k
-              traits.machine
-              traits.workstation
-              traits.gnome
-              traits.hardened
-              users.nason
-            ];
-          };
-          mini = nixpkgs.lib.nixosSystem {
-            inherit (x86_64Base) system;
-            modules = x86_64Base.modules ++ [
-              platforms.mini
-              traits.machine
-              traits.k3s
-              users.nason
-            ];
-          };
-          architect = nixpkgs.lib.nixosSystem {
-            inherit (x86_64Base) system;
-            modules = x86_64Base.modules ++ [
-              platforms.architect
-              traits.machine
-              traits.workstation
-              traits.gnome
-              traits.hardened
-              traits.gaming
-              users.nason
-              services.postgres
-            ];
-          };
-          nomad = nixpkgs.lib.nixosSystem {
-            inherit (x86_64Base) system;
-            modules = x86_64Base.modules ++ [
-              platforms.nomad
-              traits.machine
-              traits.workstation
-              traits.gnome
-              traits.hardened
-              users.nason
-            ];
-          };
-          wsl = nixpkgs.lib.nixosSystem {
-            inherit (x86_64Base) system;
-            modules = x86_64Base.modules ++ [
-              nixos-wsl.nixosModules.wsl
-              platforms.wsl
-              users.nason
-            ];
-          };
+        });
+
+      nixosConfigurations = let
+        # Shared config between both the liveimage and real system
+        aarch64Base = {
+          system = "aarch64-linux";
+          modules = with self.nixosModules; [
+            { config = { nix.registry.nixpkgs.flake = nixpkgs; }; }
+            home-manager.nixosModules.home-manager
+            traits.overlay
+            traits.base
+            services.openssh
+          ];
         };
+        x86_64Base = {
+          system = "x86_64-linux";
+          modules = with self.nixosModules; [
+            { config = { nix.registry.nixpkgs.flake = nixpkgs; }; }
+            home-manager.nixosModules.home-manager
+            traits.overlay
+            traits.base
+            services.openssh
+          ];
+        };
+      in with self.nixosModules; {
+        x86_64IsoImage = nixpkgs.lib.nixosSystem {
+          inherit (x86_64Base) system;
+          modules = x86_64Base.modules
+            ++ [ platforms.iso-minimal platforms.mini ];
+        };
+        aarch64IsoImage = nixpkgs.lib.nixosSystem {
+          inherit (aarch64Base) system;
+          modules = aarch64Base.modules ++ [
+            platforms.iso
+            {
+              config = {
+                virtualisation.vmware.guest.enable = nixpkgs.lib.mkForce false;
+                services.xe-guest-utilities.enable = nixpkgs.lib.mkForce false;
+              };
+            }
+          ];
+        };
+        honeycombIsoImage = nixpkgs.lib.nixosSystem {
+          inherit (aarch64Base) system;
+          modules = aarch64Base.modules ++ [
+            platforms.iso
+            traits.honeycomb_lx2k
+            {
+              config = {
+                virtualisation.vmware.guest.enable = nixpkgs.lib.mkForce false;
+                services.xe-guest-utilities.enable = nixpkgs.lib.mkForce false;
+              };
+            }
+          ];
+        };
+        gizmo = nixpkgs.lib.nixosSystem {
+          inherit (aarch64Base) system;
+          modules = aarch64Base.modules ++ [
+            platforms.gizmo
+            traits.honeycomb_lx2k
+            traits.machine
+            traits.workstation
+            traits.gnome
+            traits.hardened
+            users.nason
+          ];
+        };
+        mini = nixpkgs.lib.nixosSystem {
+          inherit (x86_64Base) system;
+          modules = x86_64Base.modules
+            ++ [ platforms.mini traits.machine traits.k3s users.nason ];
+        };
+        architect = nixpkgs.lib.nixosSystem {
+          inherit (x86_64Base) system;
+          modules = x86_64Base.modules ++ [
+            platforms.architect
+            traits.machine
+            traits.workstation
+            traits.gnome
+            traits.hardened
+            traits.gaming
+            users.nason
+            services.postgres
+          ];
+        };
+        nomad = nixpkgs.lib.nixosSystem {
+          inherit (x86_64Base) system;
+          modules = x86_64Base.modules ++ [
+            platforms.nomad
+            traits.machine
+            traits.workstation
+            traits.gnome
+            traits.hardened
+            users.nason
+          ];
+        };
+        wsl = nixpkgs.lib.nixosSystem {
+          inherit (x86_64Base) system;
+          modules = x86_64Base.modules
+            ++ [ nixos-wsl.nixosModules.wsl platforms.wsl users.nason ];
+        };
+      };
 
       nixosModules = {
         platforms.container = ./platforms/container.nix;
@@ -196,8 +173,10 @@
         platforms.architect = ./platforms/architect.nix;
         platforms.nomad = ./platforms/nomad.nix;
         platforms.mini = ./platforms/mini.nix;
-        platforms.iso-minimal = "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
-        platforms.iso = "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix";
+        platforms.iso-minimal =
+          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
+        platforms.iso =
+          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix";
         traits.overlay = { nixpkgs.overlays = [ self.overlays.default ]; };
         traits.base = ./traits/base.nix;
         traits.machine = ./traits/machine.nix;
@@ -220,12 +199,10 @@
             inherit system;
             overlays = [ self.overlays.default ];
           };
-        in
-        {
-          format = pkgs.runCommand "check-format"
-            {
-              buildInputs = with pkgs; [ rustfmt cargo ];
-            } ''
+        in {
+          format = pkgs.runCommand "check-format" {
+            buildInputs = with pkgs; [ rustfmt cargo ];
+          } ''
             ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check ${./.}
             touch $out # it worked!
           '';

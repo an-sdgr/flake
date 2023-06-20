@@ -5,8 +5,7 @@ let
   efiDevice = "/dev/nvme0n1p1";
   device = "/dev/nvme0n1p2";
   makeMounts = import ./../functions/make_mounts.nix;
-in
-{
+in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     # "${modulesPath}/profiles/qemu-guest.nix"
@@ -17,7 +16,8 @@ in
     # might need intel here
     #boot.initrd.kernelModules = [ "amdgpu" ];
     # might need intel kvm here
-    boot.kernelModules = [ "tap" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+    boot.kernelModules =
+      [ "tap" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
 
     #services.xserver.videoDrivers = [ "modesetting" ];
 
@@ -31,17 +31,16 @@ in
     #];
     #environment.variables.VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/amd_icd64.json";
 
-    fileSystems = makeMounts {
-      inherit device deviceLabel efiDevice;
-    };
+    fileSystems = makeMounts { inherit device deviceLabel efiDevice; };
 
     # This doesn't seem to work...
     /* environment.etc."crypttab" = {
-      enable = true;
-      text = ''
-      encrypt /dev/nvme1n1p2 - fido2-device=auto
-      '';
-    }; */
+         enable = true;
+         text = ''
+         encrypt /dev/nvme1n1p2 - fido2-device=auto
+         '';
+       };
+    */
 
     #virtualisation.docker.enable = true;
 
