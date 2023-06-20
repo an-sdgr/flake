@@ -1,5 +1,5 @@
 {
-  description = "Hoverbear's Flake";
+  description = "an-sdgr's flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
