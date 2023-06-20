@@ -91,7 +91,7 @@
         x86_64IsoImage = nixpkgs.lib.nixosSystem {
           inherit (x86_64Base) system;
           modules = x86_64Base.modules
-            ++ [ platforms.iso-minimal platforms.mini ];
+          ++ [ platforms.iso-minimal platforms.mini traits.iso ];
         };
         aarch64IsoImage = nixpkgs.lib.nixosSystem {
           inherit (aarch64Base) system;
@@ -179,6 +179,7 @@
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix";
         traits.overlay = { nixpkgs.overlays = [ self.overlays.default ]; };
         traits.base = ./traits/base.nix;
+        traits.iso = ./traits/iso.nix;
         traits.machine = ./traits/machine.nix;
         traits.k3s = ./traits/k3s.nix;
         traits.gaming = ./traits/gaming.nix;
