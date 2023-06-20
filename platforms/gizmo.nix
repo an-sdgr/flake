@@ -62,9 +62,9 @@ in
     # jnettlet suggested the following patch:
     hardware.opengl.package =
       let
-      myMesa = (pkgs.mesa.override {
+      myMesa = pkgs.mesa.override {
         galliumDrivers = [ "radeonsi" "swrast" ];
-      }); #.overrideAttrs (attrs: { patches = attrs.patches ++ [ ../patches/gizmo-lx2k-mesa.patch ]; });
+      }; #.overrideAttrs (attrs: { patches = attrs.patches ++ [ ../patches/gizmo-lx2k-mesa.patch ]; });
       in
       lib.mkForce myMesa.drivers;
 
@@ -82,7 +82,7 @@ in
     nixpkgs.overlays = [
       (final: prev: {
         # The default flags used in Nix builds are rather suboptimal for the LX2K.
-        # Additionally the `../trait/source-build.nix` trick won't work with Clang since it won't 
+        # Additionally the `../trait/source-build.nix` trick won't work with Clang since it won't
         # accept `-march=native` with the LX2K.
         /*
           stdenv = prev.stdenv // {

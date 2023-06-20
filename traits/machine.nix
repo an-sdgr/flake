@@ -26,11 +26,11 @@
     boot.loader.systemd-boot.editor = true;
     boot.loader.systemd-boot.configurationLimit = 10;
     boot.loader.efi.efiSysMountPoint = "/efi";
-    boot.binfmt.emulatedSystems = (if pkgs.stdenv.isx86_64 then [
+    boot.binfmt.emulatedSystems = if pkgs.stdenv.isx86_64 then [
       "aarch64-linux"
     ] else if pkgs.stdenv.isAarch64 then [
       "x86_64-linux"
-    ] else [ ]);
+    ] else [ ];
 
     # http://0pointer.net/blog/unlocking-luks2-volumes-with-tpm2-fido2-pkcs11-security-hardware-on-systemd-248.html
     # security.pam.u2f.enable = true;
@@ -64,7 +64,7 @@
     #  alsa.support32Bit = true;
     #  pulse.enable = true;
     #};
-    
+
     #services.tailscale.enable = true;
 
     security.rtkit.enable = true;
@@ -82,7 +82,7 @@
     #virtualisation.libvirtd.qemu.swtpm.enable = true;
     #virtualisation.libvirtd.qemu.swtpm.package = pkgs.swtpm;
     #virtualisation.libvirtd.qemu.runAsRoot = false;
-    #virtualisation.spiceUSBRedirection.enable = true; # Note that this allows users arbitrary access to USB devices. 
+    #virtualisation.spiceUSBRedirection.enable = true; # Note that this allows users arbitrary access to USB devices.
     virtualisation.podman.enable = true;
 
     # opt in state
