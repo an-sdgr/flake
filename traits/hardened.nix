@@ -6,7 +6,7 @@
 * https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/hardened.nix
 * https://tails.boum.org/contribute/design/kernel_hardening/
 */
-{ pkgs, lib, ... }:
+{ ... }:
 
 {
   config = {

@@ -21,7 +21,7 @@
 
 
 */
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   config = {

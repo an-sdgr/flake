@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ config, modulesPath, ... }:
 
 let
   encryptedDeviceLabel = "encrypt";

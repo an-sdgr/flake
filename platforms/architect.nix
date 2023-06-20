@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ config, pkgs, modulesPath, ... }:
 
 let
   encryptedDeviceLabel = "encrypt";
@@ -40,7 +40,7 @@ in
       encrypt /dev/nvme1n1p2 - fido2-device=auto
       '';
     }; */
-  
+
     virtualisation.docker.enable = true;
 
     nix.distributedBuilds = true;

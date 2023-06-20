@@ -1,7 +1,7 @@
 /*
   A trait for headed boxxen
 */
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   config = {

@@ -1,4 +1,4 @@
-{ neovim, vimPlugins, tree-sitter, gcc, }:
+{ neovim, vimPlugins, tree-sitter,  }:
 
 let
   treesitter-parsers =
