@@ -86,7 +86,7 @@
         x86_64IsoImage = nixpkgs.lib.nixosSystem {
           inherit (x86_64Base) system;
           modules = x86_64Base.modules
-          ++ [ platforms.iso-minimal platforms.mini traits.iso ];
+            ++ [ platforms.iso-minimal platforms.mini traits.iso ];
         };
         aarch64IsoImage = nixpkgs.lib.nixosSystem {
           inherit (aarch64Base) system;

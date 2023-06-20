@@ -1,9 +1,7 @@
 { ... }:
 
 {
-  config = {
-  isoImage.squashfsCompression = "gzip -Xcompression-level 1";
-};
+  config = { isoImage.squashfsCompression = "gzip -Xcompression-level 1"; };
 
 }
 
