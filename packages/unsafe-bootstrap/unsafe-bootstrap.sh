@@ -19,7 +19,7 @@ setup_files() {
 
 run_disko() {
   sudo nix run --extra-experimental-features nix-command --extra-experimental-features flakes \
-    github:nix-community/disko -- --mode zap_create_mount ./modules/nixos/disk-config.nix
+    github:nix-community/disko -- --mode zap_create_mount /tmp/flake-main/modules/nixos/disk-config.nix
 }
 
 
