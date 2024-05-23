@@ -1,18 +1,19 @@
 set -e
 
-BLUE=34
-CYAN=36
-RED=31
+#BLUE=34
+#CYAN=36
+#RED=31
 
 
 download_config() {
+  cd /tmp
   curl -LJ0 https://github.com/na-son/flake/archive/main.zip -o flake.zip
   unzip flake.zip
   cd flake
 }
 setup_files() {
   sudo mkdir -p /mnt/etc/nixos
-  sudo cp -r * /mnt/etc/nixos
+  sudo cp -r ./* /mnt/etc/nixos
   cd /mnt/etc/nixos
 }
 
@@ -22,28 +23,28 @@ run_disko() {
 }
 
 
-install_nixos() {
-  ARCH=$(uname -m)
-
-  case "$ARCH" in
-    x86_64)
-      FLAKE_TARGET="x86_64-linux"
-      ;;
-    aarch64)
-      FLAKE_TARGET="aarch64-linux"
-      ;;
-    *)
-      echo -e "Unsupported architecture: $ARCH"
-      exit 1
-      ;;
-  esac
-
-  echo "Disk initialization complete. ________________________________________"
-  echo "Installing NixOS........................................"
-
-  sudo nixos-install --flake .#$FLAKE_TARGET $@
-  sudo chmod -R 775 /mnt/etc/nixos
-}
+#install_nixos() {
+#  ARCH=$(uname -m)
+#
+#  case "$ARCH" in
+#    x86_64)
+#      FLAKE_TARGET="x86_64-linux"
+#      ;;
+#    aarch64)
+#      FLAKE_TARGET="aarch64-linux"
+#      ;;
+#    *)
+#      echo -e "Unsupported architecture: $ARCH"
+#      exit 1
+#      ;;
+#  esac
+#
+#  echo "Disk initialization complete. ________________________________________"
+#  echo "Installing NixOS........................................"
+#
+#  #sudo nixos-install --flake .#$FLAKE_TARGET $@
+#  sudo chmod -R 775 /mnt/etc/nixos
+#}
 
 download_config
 run_disko
