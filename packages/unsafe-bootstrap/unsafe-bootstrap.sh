@@ -9,7 +9,7 @@ download_config() {
   cd /tmp
   curl -LJ0 https://github.com/na-son/flake/archive/main.zip -o flake.zip
   unzip flake.zip
-  cd flake
+  cd flake-main
 }
 setup_files() {
   sudo mkdir -p /mnt/etc/nixos
